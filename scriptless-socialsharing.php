@@ -6,22 +6,26 @@
  * To have it work correctly you need to enable the html_meta_tags plugin 
  * and the Open Graph (og:) meta data elements.
  *
- * The plugin loads an default CSS styling using an icon font optionally (Thanks to icomoon.io). 
- * If you wish to use theme based custom icons and css to avoid extra loading you can disable it.
+ * The plugin loads an default CSS styling using an icon font optionally. If you wish to use theme based custom icons 
+ * and css to avoid extra loading you can disable it.
+ *
+ * Icons from the icon font "icomoon free" 
+ * http://icomoon.io/#icons-icomoon
+ * License: GPL / CC BY 30
  *
  * Usage:
  * Place <?php printScriptlessSocialSharingButtons(); ?> on your theme files where you wish the buttons to appear.
  *
- * @license GPL v3
- * @author Malte Müller (acrylian)
- *
+ * @author Malte Müller (acrylian) <info@maltem.de>
+ * @copyright 2014 Malte Müller
+ * @license GPL v3 or later
  * @package plugins
  * @subpackage social
  */
 $plugin_is_filter = 9 | THEME_PLUGIN;
 $plugin_description = gettext('A plugin that provides scriptless and privacy friendly sharing buttons for Facebook, Twitter, Google+, Pinterest, Linkedin and Xing.');
 $plugin_author = 'Malte Müller (acrylian)';
-$plugin_version = '1.0';
+$plugin_version = '1.0.1';
 $option_interface = 'scriptless_socialsharing_options';
 if (getOption('scriptless_socialsharing_iconfont')) {
   zp_register_filter('theme_head', 'scriptlesssocialsharingCSS');
