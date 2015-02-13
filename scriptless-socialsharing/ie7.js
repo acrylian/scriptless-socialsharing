@@ -1,5 +1,5 @@
 /* To avoid CSS expressions while still supporting IE 7 and IE 6, use this script */
-/* The script tag referring to this file must be placed before the ending body tag. */
+/* The script tag referencing this file must be placed before the ending body tag. */
 
 /* Use conditional comments in order to target IE 7 and older:
 	<!--[if lt IE 8]><!-->
@@ -13,12 +13,14 @@
 		el.innerHTML = '<span style="font-family: \'scriptless-socialbuttons\'">' + entity + '</span>' + html;
 	}
 	var icons = {
-		'icon-facebook': '&#xe600;',
-		'icon-twitter': '&#xe601;',
-		'icon-google-plus': '&#xe602;',
-		'icon-xing': '&#xe603;',
-		'icon-pinterest': '&#xe604;',
-		'icon-linkedin': '&#xe605;',
+		'icon-twitter': '&#xf099;',
+		'icon-facebook': '&#xf09a;',
+		'icon-pinterest': '&#xf0d2;',
+		'icon-google-plus': '&#xf0d5;',
+		'icon-linkedin': '&#xf0e1;',
+		'icon-xing': '&#xf168;',
+		'icon-reddit': '&#xf1a1;',
+		'icon-stumbleupon': '&#xf1a4;',
 		'0': 0
 		},
 		els = document.getElementsByTagName('*'),
