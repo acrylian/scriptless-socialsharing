@@ -1,9 +1,9 @@
 <?php
 /**
- * A plugin that provides scriptless and privacy friendly sharing buttons for 
- * Facebook, Twitter, Google+, Pinterest, Linkedin and Xing. 
+ * A Zenphoto plugin that provides scriptless and privacy friendly sharing buttons for Facebook, Twitter, Google+, Pinterest, 
+ * Linkedin, Xing, reddit, stumbleupon and e-mail
  * 
- * To have it work correctly you need to enable the html_meta_tags plugin 
+ * To have it work correctly you should to enable the html_meta_tags plugin 
  * and the Open Graph (og:) meta data elements.
  *
  * The plugin loads an default CSS styling using an icon font optionally. If you wish to use theme based custom icons 
@@ -17,13 +17,13 @@
  * Place <?php printScriptlessSocialSharingButtons(); ?> on your theme files where you wish the buttons to appear.
  *
  * @author Malte Müller (acrylian) <info@maltem.de>
- * @copyright 2014 Malte Müller
+ * @copyright 2015 Malte Müller
  * @license GPL v3 or later
  * @package plugins
  * @subpackage social
  */
 $plugin_is_filter = 9 | THEME_PLUGIN;
-$plugin_description = gettext('A plugin that provides scriptless and privacy friendly sharing buttons for Facebook, Twitter, Google+, Pinterest, Linkedin, Xing, reddit and stumbleupon.');
+$plugin_description = gettext('A Zenphoto plugin that provides scriptless and privacy friendly sharing buttons for Facebook, Twitter, Google+, Pinterest, Linkedin, Xing, reddit, stumbleupon and e-mail.');
 $plugin_author = 'Malte Müller (acrylian)';
 $plugin_version = '1.1';
 $option_interface = 'scriptless_socialsharing_options';
@@ -33,9 +33,6 @@ if (getOption('scriptless_socialsharing_iconfont')) {
 
 class scriptless_socialsharing_options {
 
-  /**
-   * class instantiation function
-   */
   function __construct() {
     
   }
@@ -52,16 +49,22 @@ class scriptless_socialsharing_options {
                 'Google+' => 'scriptless_socialsharing_gplus',
                 'Pinterest' => 'scriptless_socialsharing_pinterest',
                 'linkedin' => 'scriptless_socialsharing_linkedin',
-                'xing' => 'scriptless_socialsharing_xing',
+                'Xing' => 'scriptless_socialsharing_xing',
                 'Reddit' => 'scriptless_socialsharing_reddit',
-                'StumbleUpon' => 'scriptless_socialsharing_stumbleupon'
+                'StumbleUpon' => 'scriptless_socialsharing_stumbleupon',
+                gettext('E-Mail') => 'scriptless_socialsharing_email'
             ),
             'desc' => gettext('Select the social networks you wish buttons to appear for.')),
-        gettext('Icon font and default CSS')
-        => array('key' => 'scriptless_socialsharing_iconfont',
+        gettext('Icon font and default CSS') => array(
+        		'key' => 'scriptless_socialsharing_iconfont',
             'type' => OPTION_TYPE_CHECKBOX,
             'order' => 1,
-            'desc' => gettext("Uncheck to disable loading to use your own theme based icon font."))
+            'desc' => gettext("Uncheck to disable loading to use your own theme based icon font and css.")),
+      	gettext('Twitter user name') => array(
+        		'key' => 'scriptless_socialsharing_twittername',
+            'type' => OPTION_TYPE_TEXTBOX,
+            'order' => 1,
+            'desc' => gettext("Enter your Twitter name without @ here if you like to have it appended to tweets made."))
     );
     return $options;
   }
@@ -80,9 +83,9 @@ function scriptlesssocialsharingCSS() {
 /**
  * Place this where you wish the buttons to appear. The plugin includes also jQUery calls to set the buttons up to allow multiple button sets per page.
  *  
- * @param string $text Text to be displayed before the sharing list. HTML code allowed. Default "<h4>Share</h4>"
+ * @param string $text Text to be displayed before the sharing list. HTML code allowed. Default empty
  */
-function printScriptlessSocialSharingButtons($text = '<h4>Share</h4>') {
+function printScriptlessSocialSharingButtons($text = '') {
   global $_zp_gallery, $_zp_gallery_page, $_zp_current_album, $_zp_current_image, $_zp_current_zenpage_news, $_zp_current_zenpage_page, $_zp_current_category;
   $title = '';
   $desc = '';
@@ -119,8 +122,10 @@ function printScriptlessSocialSharingButtons($text = '<h4>Share</h4>') {
       }
       break;
   }
+
   //$content = strip_tags($title);
   //$desc = getContentShorten($title, 100, ' (…)', false);
+  $title = urlencode($title);
   $url = PROTOCOL . "://" . $_SERVER['HTTP_HOST'].html_encode($url);
   if($text) {
      echo $text; 
@@ -131,8 +136,13 @@ function printScriptlessSocialSharingButtons($text = '<h4>Share</h4>') {
     		<li><a class="icon-facebook" href="http://www.facebook.com/sharer/sharer.php?u=<?php echo $url; ?>" title="Facebook">Facebook</a></li>
       <?php } ?>
 
-    <?php if (getOption('scriptless_socialsharing_twitter')) { ?>
-    		<li><a class="icon-twitter" href="https://twitter.com/intent/tweet?text=<?php echo $title; ?>&amp;url=<?php echo $url; ?>" title="Twitter">Twitter</a></li>
+    <?php if (getOption('scriptless_socialsharing_twitter')) { 
+    				$via = '';
+    				if (getOption('scriptless_socialsharing_twittername')) {
+    					$via = '&amp;via='.getOption('scriptless_socialsharing_twittername');
+    				}
+    				?>
+    		<li><a class="icon-twitter" href="https://twitter.com/intent/tweet?text=<?php echo $title.$via; ?>&amp;url=<?php echo $url; ?>" title="Twitter">Twitter</a></li>
     <?php } ?>
 
     <?php if (getOption('scriptless_socialsharing_pinterest')) { ?>
@@ -153,7 +163,10 @@ function printScriptlessSocialSharingButtons($text = '<h4>Share</h4>') {
   			<li><a class="icon-reddit" href="http://reddit.com/submit?url=<?php echo $url; ?>/?socialshare&amp;title=<?php echo $title; ?>" title="Reddit">Reddit</a></li>
   	<?php } ?>
   	<?php if (getOption('scriptless_socialsharing_stumbleupon')) { ?>
-  			<li><a class="icon-stumbleupon" href=" http://www.stumbleupon.com/badge/?url=<?php echo $url; ?>/?socialshare" title="StumbleUpon">StumbleUpon</a></li>
+  			<li><a class="icon-stumbleupon" href="http://www.stumbleupon.com/badge/?url=<?php echo $url; ?>/?socialshare" title="StumbleUpon">StumbleUpon</a></li>
+  	<?php } ?>
+  	<?php if (getOption('scriptless_socialsharing_email')) { ?>
+  			<li><a class="icon-envelope" href="mailto:?subject=<?php echo $title; ?>&amp;body=<?php echo $url; ?>" title="E-Mail"><?php echo gettext('E-Mail'); ?></a></li>
   	<?php } ?>
   </ul>
   <?php

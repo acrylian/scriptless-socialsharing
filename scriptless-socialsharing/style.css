@@ -56,6 +56,10 @@
 	content: "\f1a4";
 }
 
+.scriptless_socialsharing .icon-envelope:before {
+	content: "\f0e0";
+}
+
 ul.scriptless_socialsharing {
 margin: 0 0 20px 0 !Important;
 padding: 0 !Important;
@@ -113,6 +117,10 @@ ul.scriptless_socialsharing a.icon-reddit {
 
 ul.scriptless_socialsharing a.icon-stumbleupon {
 	background: #d34836;
+}
+
+ul.scriptless_socialsharing a.icon-envelope {
+	background: gray;
 }
 
 

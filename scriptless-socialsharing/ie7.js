@@ -17,6 +17,7 @@
 		'icon-facebook': '&#xf09a;',
 		'icon-pinterest': '&#xf0d2;',
 		'icon-google-plus': '&#xf0d5;',
+		'icon-envelope': '&#xf0e0;',
 		'icon-linkedin': '&#xf0e1;',
 		'icon-xing': '&#xf168;',
 		'icon-reddit': '&#xf1a1;',

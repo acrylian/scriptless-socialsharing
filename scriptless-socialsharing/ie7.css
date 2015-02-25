@@ -10,6 +10,9 @@
 .icon-google-plus {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xf0d5;');
 }
+.icon-envelope {
+	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xf0e0;');
+}
 .icon-linkedin {
 	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xf0e1;');
 }
