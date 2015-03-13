@@ -113,8 +113,12 @@ function printScriptlessSocialSharingButtons($text = '') {
         } else {
           $url = $_zp_current_category->getLink();
           $title = $_zp_current_category->getTitle();
+        } else {
+        	$url = getNewsIndexURL();
+          $title = getBareGalleryTitle().' - '.gettext('News');
         }
       }
+      break;
     case 'pages.php':
       if (function_exists("is_Pages")) {
         $url = $_zp_current_zenpage_page->getLink();
