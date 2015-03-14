@@ -84,16 +84,17 @@ function scriptlesssocialsharingCSS() {
  * Place this where you wish the buttons to appear. The plugin includes also jQUery calls to set the buttons up to allow multiple button sets per page.
  *  
  * @param string $text Text to be displayed before the sharing list. HTML code allowed. Default empty
+ * @param string $staticpagetitle If using static custom pages the file name is used unless you set this. Meant to be used for multilingual sites, too.
  */
-function printScriptlessSocialSharingButtons($text = '') {
+function printScriptlessSocialSharingButtons($text = '', $staticpagetitle = NULL) {
   global $_zp_gallery, $_zp_gallery_page, $_zp_current_album, $_zp_current_image, $_zp_current_zenpage_news, $_zp_current_zenpage_page, $_zp_current_category;
   $title = '';
   $desc = '';
   $url = '';
   $imgsource = '';
   switch ($_zp_gallery_page) {
-    default:
     case 'index.php':
+    case 'gallery.php':
       $url = getGalleryIndexURL();
       $title = getBareGalleryTitle();
       break;
@@ -110,7 +111,7 @@ function printScriptlessSocialSharingButtons($text = '') {
         if (is_NewsArticle()) {
           $url = $_zp_current_zenpage_news->getLink();
           $title = $_zp_current_zenpage_news->getTitle();
-        } else {
+        } else if(is_NewsCategory()) {
           $url = $_zp_current_category->getLink();
           $title = $_zp_current_category->getTitle();
         } else {
@@ -125,6 +126,33 @@ function printScriptlessSocialSharingButtons($text = '') {
         $title = $_zp_current_zenpage_page->getTitle();
       }
       break;
+    default: //static custom pages
+			$custompage = stripSuffix($_zp_gallery_page);
+			if(is_null($staticpagetitle) {
+				// Handle some static custom pages we often have
+				switch ($_zp_gallery_page) {
+    			case 'contact.php':
+    				$statictitle = gettext('Contact');
+    				break;
+    			case 'archive.php':
+    				$statictitle = gettext('Archive');
+    				break;
+    			case 'register.php':
+    				$statictitle = gettext('Register');
+    				break;
+    			case 'search.php':
+    				$statictitle = gettext('Search');
+    				break;
+    			default: 
+    				$statictitle = strtoupper($custompage);
+    				break;
+    		}
+			} else {
+				$statictitle = $staticpagetitle;
+			}
+    	$url = getCustomPageURL($custompage);
+      $title = getBareGalleryTitle().' - '.$statictitle;
+    	break;
   }
 
   //$content = strip_tags($title);
