@@ -1,0 +1,98 @@
+@import url('style.css');
+
+ul.scriptless_socialsharing {
+	margin: 0 0 20px 0 !Important;
+	padding: 0 !Important;
+	min-height: 60px;
+	display: block;
+	clear: both;
+}
+ul.scriptless_socialsharing li {
+	display: inline;
+	margin: 0 0 0px 0;
+	padding: 0;
+	min-height: 20px;
+}
+
+ul.scriptless_socialsharing a {
+  padding: 0.4em 0.6em 0.6em 0.6em;
+  margin: 5px 5px 5px 5px;
+  display:block;
+  color: white;
+  background: blue;
+	min-width: 12px;
+  min-height: auto;
+  float: left;
+  font-size: 1em;
+	text-align: center;
+}
+
+ul.scriptless_socialsharing a:before {
+	margin: 5px 0px 0 0px !important;
+	position: relative;
+	top: 1px;
+}
+
+ul.scriptless_socialsharing li a:before{
+	font-weight: 300;
+}
+
+ul.scriptless_socialsharing a.icon-facebook {
+  background: #3B5998;
+}
+
+ul.scriptless_socialsharing a.icon-twitter {
+  background: #55acee;
+}
+
+ul.scriptless_socialsharing a.icon-google-plus {
+  background: #d34836;
+}
+
+ul.scriptless_socialsharing a.icon-xing {
+  background: #005b5f;
+}
+
+ul.scriptless_socialsharing a.icon-pinterest-p {
+  background: #cc2127;
+}
+
+ul.scriptless_socialsharing a.icon-linkedin {
+	background: #0177b5;
+}
+
+ul.scriptless_socialsharing a.icon-reddit {
+	background: #55acee;
+}
+
+ul.scriptless_socialsharing a.icon-stumbleupon {
+	background: #d34836;
+}
+
+ul.scriptless_socialsharing a.icon-tumblr {
+	background: #35465c;
+}
+
+ul.scriptless_socialsharing a.icon-whatsapp {
+	background: #4dc247;
+	display: none;
+}
+
+ul.scriptless_socialsharing a.icon-envelope-o {
+	background: gray;
+}
+
+ul.scriptless_socialsharing li a {
+	margin-left: 3px;
+	color: white !important;
+}
+
+ul.scriptless_socialsharing li a:hover,
+ul.scriptless_socialsharing li a:active {
+	margin-left: 3px;
+	color: black !important;
+}
+
+ul.scriptless_socialsharing li:before {
+  margin-right: 0px;
+}

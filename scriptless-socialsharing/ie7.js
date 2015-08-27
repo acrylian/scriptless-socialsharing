@@ -13,15 +13,17 @@
 		el.innerHTML = '<span style="font-family: \'scriptless-socialbuttons\'">' + entity + '</span>' + html;
 	}
 	var icons = {
+		'icon-envelope-o': '&#xf003;',
 		'icon-twitter': '&#xf099;',
 		'icon-facebook': '&#xf09a;',
-		'icon-pinterest': '&#xf0d2;',
 		'icon-google-plus': '&#xf0d5;',
-		'icon-envelope': '&#xf0e0;',
 		'icon-linkedin': '&#xf0e1;',
 		'icon-xing': '&#xf168;',
+		'icon-tumblr': '&#xf173;',
 		'icon-reddit': '&#xf1a1;',
 		'icon-stumbleupon': '&#xf1a4;',
+		'icon-pinterest-p': '&#xf231;',
+		'icon-whatsapp': '&#xf232;',
 		'0': 0
 		},
 		els = document.getElementsByTagName('*'),
