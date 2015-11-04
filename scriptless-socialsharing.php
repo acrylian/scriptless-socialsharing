@@ -25,7 +25,7 @@
 $plugin_is_filter = 9 | THEME_PLUGIN;
 $plugin_description = gettext('A Zenphoto plugin that provides scriptless and privacy friendly sharing buttons for Facebook, Twitter, Google+, Pinterest, Linkedin, Xing, Reddit, Stumbleupon, Tumblr, WhatsApp (iOS only) and e-mail. (Note: No share counts because of that!).');
 $plugin_author = 'Malte Müller (acrylian)';
-$plugin_version = '1.3';
+$plugin_version = '1.3.1';
 $option_interface = 'scriptless_socialsharing_options';
 if (getOption('scriptless_socialsharing_iconfont')) {
 	zp_register_filter('theme_head', 'scriptlesssocialsharingCSS');
@@ -189,7 +189,7 @@ function printScriptlessSocialSharingButtons($text = '', $staticpagetitle = NULL
 	<ul class="scriptless_socialsharing">
 		<?php if (getOption('scriptless_socialsharing_facebook')) { ?>
 			<li>
-				<a class="icon-facebook" href="http://www.facebook.com/sharer/sharer.php?u=<?php echo $url; ?>" title="Facebook">
+				<a class="icon-facebook" href="http://www.facebook.com/sharer/sharer.php?u=<?php echo $url; ?>" title="Facebook" target="_blank">
 					<?php
 					if (!empty($buttontitles)) {
 						echo $buttontitles[0];
@@ -207,7 +207,7 @@ function printScriptlessSocialSharingButtons($text = '', $staticpagetitle = NULL
 			}
 			?>
 			<li>
-				<a class="icon-twitter" href="https://twitter.com/intent/tweet?text=<?php echo $title . $via; ?>&amp;url=<?php echo $url; ?>" title="Twitter">
+				<a class="icon-twitter" href="https://twitter.com/intent/tweet?text=<?php echo $title . $via; ?>&amp;url=<?php echo $url; ?>" title="Twitter" target="_blank">
 					<?php
 					if (!empty($buttontitles)) {
 						echo $buttontitles[1];
@@ -220,7 +220,7 @@ function printScriptlessSocialSharingButtons($text = '', $staticpagetitle = NULL
 
 
 				<?php if (getOption('scriptless_socialsharing_gplus')) { ?>
-			<li><a class="icon-google-plus" href="https://plus.google.com/share?url=<?php echo $url; ?>" title="Google+">
+			<li><a class="icon-google-plus" href="https://plus.google.com/share?url=<?php echo $url; ?>" title="Google+" target="_blank">
 					<?php
 					if (!empty($buttontitles)) {
 						echo 'Google+';
@@ -232,7 +232,7 @@ function printScriptlessSocialSharingButtons($text = '', $staticpagetitle = NULL
 
 				<?php if (getOption('scriptless_socialsharing_pinterest')) { ?>
 			<li>
-				<a class="icon-pinterest-p" href="http://pinterest.com/pin/create/button/?url=<?php echo $url; ?>&amp;description=<?php echo $title; ?>&amp;media=<?php echo $url; ?>" title="Pinterest">
+				<a class="icon-pinterest-p" href="http://pinterest.com/pin/create/button/?url=<?php echo $url; ?>&amp;description=<?php echo $title; ?>&amp;media=<?php echo $url; ?>" title="Pinterest" target="_blank">
 					<?php
 					if (!empty($buttontitles)) {
 						echo 'Pinterest';
@@ -244,7 +244,7 @@ function printScriptlessSocialSharingButtons($text = '', $staticpagetitle = NULL
 
 		<?php if (getOption('scriptless_socialsharing_linkedin')) { ?>
 			<li>
-				<a class="icon-linkedin" href="http://www.linkedin.com/shareArticle?mini=true&amp;url=<?php echo $url; ?>&amp;title=<?php echo $title; ?>&amp;source=<?php echo $url; ?>" title="LinkedIn">
+				<a class="icon-linkedin" href="http://www.linkedin.com/shareArticle?mini=true&amp;url=<?php echo $url; ?>&amp;title=<?php echo $title; ?>&amp;source=<?php echo $url; ?>" title="LinkedIn" target="_blank">
 					<?php
 					if (!empty($buttontitles)) {
 						echo 'linkedin';
@@ -256,7 +256,7 @@ function printScriptlessSocialSharingButtons($text = '', $staticpagetitle = NULL
 			
 		<?php if (getOption('scriptless_socialsharing_xing')) { ?>
 			<li>
-				<a class="icon-xing" href="https://www.xing-share.com/app/user?op=share;sc_p=xing-share;url=<?php echo $url; ?>" title="Xing">
+				<a class="icon-xing" href="https://www.xing-share.com/app/user?op=share;sc_p=xing-share;url=<?php echo $url; ?>" title="Xing" target="_blank">
 					<?php
 					if (!empty($buttontitles)) {
 						echo 'Xing';
@@ -268,7 +268,7 @@ function printScriptlessSocialSharingButtons($text = '', $staticpagetitle = NULL
 			
 		<?php if (getOption('scriptless_socialsharing_reddit')) { ?>
 			<li>
-				<a class="icon-reddit" href="http://reddit.com/submit?url=<?php echo $url; ?>/?socialshare&amp;title=<?php echo $title; ?>" title="Reddit">
+				<a class="icon-reddit" href="http://reddit.com/submit?url=<?php echo $url; ?>/?socialshare&amp;title=<?php echo $title; ?>" title="Reddit" target="_blank">
 					<?php
 					if (!empty($buttontitles)) {
 						echo 'Reddit';
@@ -280,7 +280,7 @@ function printScriptlessSocialSharingButtons($text = '', $staticpagetitle = NULL
 			
 		<?php if (getOption('scriptless_socialsharing_stumbleupon')) { ?>
 			<li>
-				<a class="icon-stumbleupon" href="http://www.stumbleupon.com/badge/?url=<?php echo $url; ?>/?socialshare" title="StumbleUpon">
+				<a class="icon-stumbleupon" href="http://www.stumbleupon.com/badge/?url=<?php echo $url; ?>/?socialshare" title="StumbleUpon" target="_blank">
 					<?php
 					if (!empty($buttontitles)) {
 						echo 'Stumbleupon';
@@ -293,7 +293,7 @@ function printScriptlessSocialSharingButtons($text = '', $staticpagetitle = NULL
 		
 		<?php if (getOption('scriptless_socialsharing_tumblr')) { ?>	
 			<li>
-				<a class="icon-tumblr" href="http://www.tumblr.com/share/link?url=<?php echo $url; ?>&amp;name=<?php echo $title; ?>" title="Tumblr">
+				<a class="icon-tumblr" href="http://www.tumblr.com/share/link?url=<?php echo $url; ?>&amp;name=<?php echo $title; ?>" title="Tumblr" target="_blank">
 					<?php
 					if (!empty($buttontitles)) {
 						echo 'tumblr';
@@ -303,8 +303,8 @@ function printScriptlessSocialSharingButtons($text = '', $staticpagetitle = NULL
 			</li>
 		<?php } ?>		
 		<?php if (getOption('scriptless_socialsharing_whatsapp')) { ?>		
-			<li class="whatsappLink">
-				<a class="icon-whatsapp" href="WhatsApp://send?text=<?php echo $url; ?>" title="Whatsapp">
+			<li class="whatsappLink hidden">
+				<a class="icon-whatsapp" href="WhatsApp://send?text=<?php echo $url; ?>" title="Whatsapp" target="_blank">
 					<?php
 					if (!empty($buttontitles)) {
 						echo 'WhatsApp';
@@ -313,12 +313,12 @@ function printScriptlessSocialSharingButtons($text = '', $staticpagetitle = NULL
 				</a>
 			</li>
 			<script>
-				(navigator.userAgent.match(/(iPhone)/g)) ? $(“.whatsappLink”).fadeIn() : null;
+				(navigator.userAgent.match(/(iPhone)/g)) ? $(“.whatsappLink”).removeClass('hidden') : null;
 			</script>
 	<?php } ?>
 			<?php if (getOption('scriptless_socialsharing_email')) { ?>
 			<li>
-				<a class="icon-envelope-o" href="mailto:?subject=<?php echo $title; ?>&amp;body=<?php echo $url; ?>" title="<?php echo html_encode(gettext('E-mail')); ?>">
+				<a class="icon-envelope-o" href="mailto:?subject=<?php echo $title; ?>&amp;body=<?php echo $url; ?>" title="<?php echo html_encode(gettext('E-mail')); ?>" target="_blank">
 					<?php
 					if (!empty($buttontitles)) {
 						echo gettext('E-mail');

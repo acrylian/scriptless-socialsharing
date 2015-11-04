@@ -75,7 +75,6 @@ ul.scriptless_socialsharing a.icon-tumblr {
 
 ul.scriptless_socialsharing a.icon-whatsapp {
 	background: #4dc247;
-	display: none;
 }
 
 ul.scriptless_socialsharing a.icon-envelope-o {
@@ -95,4 +94,8 @@ ul.scriptless_socialsharing li a:active {
 
 ul.scriptless_socialsharing li:before {
   margin-right: 0px;
+}
+
+ul.scriptless_socialsharing li.hidden {
+	display: none;
 }
