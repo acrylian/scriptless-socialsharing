@@ -9,6 +9,6 @@ The plugin loads an default CSS styling using an icon font optionally (Thanks to
 
 ##Usage:
 
-- Place the plugin within `/plugins`
+- Place the file `scriptless-socialsharing.php` and folder of the same name within `/plugins`
 - Enable the plugin
 - Place `<?php printScriptlessSocialSharingButtons(); ?>` on your theme files where you wish the buttons to appear.
