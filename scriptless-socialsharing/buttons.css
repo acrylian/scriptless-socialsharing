@@ -37,7 +37,7 @@ ul.scriptless_socialsharing li a:before{
 	font-weight: 300;
 }
 
-ul.scriptless_socialsharing a.icon-facebook {
+ul.scriptless_socialsharing a.icon-facebook-f {
   background: #3B5998;
 }
 
@@ -61,7 +61,7 @@ ul.scriptless_socialsharing a.icon-linkedin {
 	background: #0177b5;
 }
 
-ul.scriptless_socialsharing a.icon-reddit {
+ul.scriptless_socialsharing a.icon-reddit-alien {
 	background: #55acee;
 }
 
@@ -77,6 +77,37 @@ ul.scriptless_socialsharing a.icon-whatsapp {
 	background: #4dc247;
 }
 
+ul.scriptless_socialsharing a.icon-digg {
+	background: black;
+}
+
+/* livejournal */
+ul.scriptless_socialsharing a.icon-pencil {
+	background: #55acee;
+}
+
+/* buffer */
+ul.scriptless_socialsharing a.icon-stack {
+	background: black;
+}
+
+ul.scriptless_socialsharing a.icon-delicious {
+	background: #0082f9;
+}
+
+ul.scriptless_socialsharing a.icon-evernote {
+	background: #04B45F;
+}
+
+ul.scriptless_socialsharing a.icon-wordpress {
+	background: #21759b;
+}
+
+ul.scriptless_socialsharing a.icon-get-pocket {
+	background: #DF013A;
+}
+
+/* mail */
 ul.scriptless_socialsharing a.icon-envelope-o {
 	background: gray;
 }
