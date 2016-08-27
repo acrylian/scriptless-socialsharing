@@ -38,7 +38,7 @@
  * Place <?php printScriptlessSocialSharingButtons(); ?> on your theme files where you wish the buttons to appear.
  *
  * @author Malte Müller (acrylian)
- * @copyright 2015 Malte Müller
+ * @copyright 2016 Malte Müller
  * @license GPL v3 or later
  * @package plugins
  * @subpackage social
@@ -46,7 +46,7 @@
 $plugin_is_filter = 9 | THEME_PLUGIN;
 $plugin_description = gettext('A Zenphoto plugin that provides scriptless and privacy friendly sharing buttons for Facebook, Twitter, Google+, Pinterest, Linkedin, Xing, Reddit, Stumbleupon, Tumblr, WhatsApp (iOS only) and e-mail. (Note: No share counts because of that!).');
 $plugin_author = 'Malte Müller (acrylian)';
-$plugin_version = '1.4.1';
+$plugin_version = '1.4.2';
 $option_interface = 'scriptless_socialsharing_options';
 if (getOption('scriptless_socialsharing_iconfont')) {
 	zp_register_filter('theme_head', 'scriptlesssocialsharingCSS');
@@ -122,6 +122,7 @@ function printScriptlessSocialSharingButtons($text='', $staticpagetitle = NULL, 
 	$title = '';
 	$desc = '';
 	$url = '';
+	$buttons = array();
 	$gallerytitle = html_encode(getBareGallerytitle());
 	$imgsource = '';
 	switch ($_zp_gallery_page) {
