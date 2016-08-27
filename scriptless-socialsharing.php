@@ -46,7 +46,7 @@
 $plugin_is_filter = 9 | THEME_PLUGIN;
 $plugin_description = gettext('A Zenphoto plugin that provides scriptless and privacy friendly sharing buttons for Facebook, Twitter, Google+, Pinterest, Linkedin, Xing, Reddit, Stumbleupon, Tumblr, WhatsApp (iOS only) and e-mail. (Note: No share counts because of that!).');
 $plugin_author = 'Malte Müller (acrylian)';
-$plugin_version = '1.4';
+$plugin_version = '1.4.1';
 $option_interface = 'scriptless_socialsharing_options';
 if (getOption('scriptless_socialsharing_iconfont')) {
 	zp_register_filter('theme_head', 'scriptlesssocialsharingCSS');
@@ -107,10 +107,7 @@ class scriptless_socialsharing_options {
 
 function scriptlesssocialsharingCSS() {
 	?>
-	<link rel="stylesheet" href="<?php echo FULLWEBPATH . '/' . USER_PLUGIN_FOLDER; ?>/scriptless-socialsharing/buttons.css" type="text/css">
-	<!--[if lt IE 8]><!-->
-	<link rel="stylesheet" href="<?php echo FULLWEBPATH . '/' . USER_PLUGIN_FOLDER; ?>/scriptless-socialsharing/ie7.css">
-	<!--<![endif]-->
+	<link rel="stylesheet" href="<?php echo FULLWEBPATH . '/' . USER_PLUGIN_FOLDER; ?>/scriptless-socialsharing/style.min.css" type="text/css">
 	<?php
 }
 
@@ -200,7 +197,7 @@ function printScriptlessSocialSharingButtons($text='', $staticpagetitle = NULL, 
 	}
 	if (getOption('scriptless_socialsharing_facebook')) {
 		$buttons[] = array(
-				'class' => 'icon-facebook-f',
+				'class' => 'sharingicon-facebook-f',
 				'title' => 'facebook',
 				'url' => 'http://www.facebook.com/sharer/sharer.php?u=' . $url
 		);
@@ -211,42 +208,42 @@ function printScriptlessSocialSharingButtons($text='', $staticpagetitle = NULL, 
 			$via = '&amp;via=' . html_encode(getOption('scriptless_socialsharing_twittername'));
 		}
 		$buttons[] = array(
-				'class' => 'icon-twitter',
+				'class' => 'sharingicon-twitter',
 				'title' => 'Twitter',
 				'url' => 'https://twitter.com/intent/tweet?text=' . $title . $via . '&amp;url=' . $url
 		);
 	}
 	if (getOption('scriptless_socialsharing_gplus')) {
 		$buttons[] = array(
-				'class' => 'icon-google-plus',
+				'class' => 'sharingicon-google-plus',
 				'title' => 'Google+',
 				'url' => 'https://plus.google.com/share?url=' . $url
 		);
 	}
 	if (getOption('scriptless_socialsharing_pinterest')) {
 		$buttons[] = array(
-				'class' => 'icon-pinterest-p',
+				'class' => 'sharingicon-pinterest-p',
 				'title' => 'Pinterest',
 				'url' => 'http://pinterest.com/pin/create/button/?url=' . $url . '&amp;description=' . $title . '&amp;media=' . $url
 		);
 	}
 	if (getOption('scriptless_socialsharing_linkedin')) {
 		$buttons[] = array(
-				'class' => 'icon-linkedin',
+				'class' => 'sharingicon-linkedin',
 				'title' => 'Linkedin',
 				'url' => 'http://www.linkedin.com/shareArticle?mini=true&amp;url=' . $url . '>&amp;title=' . $title . '&amp;source=' . $url
 		);
 	}
 	if (getOption('scriptless_socialsharing_xing')) {
 		$buttons[] = array(
-				'class' => 'icon-xing',
+				'class' => 'sharingicon-xing',
 				'title' => 'Xing',
 				'url' => 'https://www.xing-share.com/app/user?op=share;sc_p=xing-share;url=' . $url
 		);
 	}
 	if (getOption('scriptless_socialsharing_reddit')) {
 		$buttons[] = array(
-				'class' => 'icon-reddit',
+				'class' => 'sharingicon-reddit',
 				'title' => 'Reddit',
 				'url' => 'http://reddit.com/submit?url=' . $url . '/?socialshare&amp;title=' . $title
 		);
@@ -254,77 +251,77 @@ function printScriptlessSocialSharingButtons($text='', $staticpagetitle = NULL, 
 
 	if (getOption('scriptless_socialsharing_stumbleupon')) {
 		$buttons[] = array(
-				'class' => 'icon-stumbleupon',
+				'class' => 'sharingicon-stumbleupon',
 				'title' => 'StumbleUpon',
 				'url' => 'http://www.stumbleupon.com/submit?url=' . $url . '&amp;title=' . $title
 		);
 	}
 	if (getOption('scriptless_socialsharing_tumblr')) {
 		$buttons[] = array(
-				'class' => 'icon-tumblr',
+				'class' => 'sharingicon-tumblr',
 				'title' => 'Tumblr',
 				'url' => 'http://www.tumblr.com/share/link?url=' . $url . '&amp;name=' . $title
 		);
 	}
 	if (getOption('scriptless_socialsharing_whatsapp')) { // must be hidden initially!
 		$buttons[] = array(
-				'class' => 'icon-whatsapp',
+				'class' => 'sharingicon-whatsapp',
 				'title' => 'Whatsapp',
 				'url' => 'WhatsApp://send?text=' . $url
 		);
 	}
 	if (getOption('scriptless_socialsharing_digg')) {
 		$buttons[] = array(
-				'class' => 'icon-digg',
+				'class' => 'sharingicon-digg',
 				'title' => 'Digg',
 				'url' => 'http://digg.com/submit?url=' . $url . '&amp;title=' . $title
 		);
 	}
 	if (getOption('scriptless_socialsharing_livejournal')) {
 		$buttons[] = array(
-				'class' => 'icon-pencil',
+				'class' => 'sharingicon-pencil',
 				'title' => 'Livejournal',
 				'url' => 'http://www.livejournal.com/update.bml?url=' . $url . '&amp;subject=' . $title
 		);
 	}
 	if (getOption('scriptless_socialsharing_buffer')) {
 		$buttons[] = array(
-				'class' => 'icon-stack',
+				'class' => 'sharingicon-stack',
 				'title' => 'Buffer',
 				'url' => 'http://bufferapp.com/add?text=' . $url . '&amp;url=' . $url
 		);
 	}
 	if (getOption('scriptless_socialsharing_delicious')) {
 		$buttons[] = array(
-				'class' => 'icon-delicious',
+				'class' => 'sharingicon-delicious',
 				'title' => 'Delicious',
 				'url' => 'https://delicious.com/save?v=5&amp;provider=' . $gallerytitle . '&amp;noui&amp;jump=close&amp;url=' . $url . '&amp;title=' . $title
 		);
 	}
 	if (getOption('scriptless_socialsharing_evernote')) {
 		$buttons[] = array(
-				'class' => 'icon-evernote',
+				'class' => 'sharingicon-evernote',
 				'title' => 'Evernote',
 				'url' => 'http://www.evernote.com/clip.action?url=' . $url . '&amp;title=' . $title
 		);
 	}
 	if (getOption('scriptless_socialsharing_wordpress')) {
 		$buttons[] = array(
-				'class' => 'icon-wordpress',
+				'class' => 'sharingicon-wordpress',
 				'title' => 'WordPress',
 				'url' => 'http://wordpress.com/press-this.php?u=' . $url . '&amp;t=' . $title
 		);
 	}
 	if (getOption('scriptless_socialsharing_pocket')) {
 		$buttons[] = array(
-				'class' => 'icon-get-pocket',
+				'class' => 'sharingicon-get-pocket',
 				'title' => 'Pocket',
 				'url' => 'https://getpocket.com/save?url=' . $url . '&amp;title=' . $title
 		);
 	}
 	if (getOption('scriptless_socialsharing_email')) {
 		$buttons[] = array(
-				'class' => 'icon-envelope-o',
+				'class' => 'sharingicon-envelope-o',
 				'title' => gettext('e-mail'),
 				'url' => 'mailto:?subject=' . $title . '&amp;body=' . $url
 		);
@@ -336,7 +333,7 @@ function printScriptlessSocialSharingButtons($text='', $staticpagetitle = NULL, 
 	<ul class="scriptless_socialsharing">
 		<?php foreach($buttons as $button) { 
 			$li_class = '';
-			if($button['class'] == 'icon-whatsapp') {
+			if($button['class'] == 'sharingicon-whatsapp') {
 				$li_class = ' class="whatsappLink hidden"';
 			}
 			?>
@@ -349,7 +346,7 @@ function printScriptlessSocialSharingButtons($text='', $staticpagetitle = NULL, 
 					?>
 				</a>
 			</li>
-			<?php if($button['class'] == 'icon-whatsapp') { ?>
+			<?php if($button['class'] == 'sharingicon-whatsapp') { ?>
 				<script>
 					(navigator.userAgent.match(/(iPhone)/g)) ? $(“.whatsappLink”).removeClass('hidden') : null;
 				</script>
