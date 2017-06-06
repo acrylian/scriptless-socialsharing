@@ -38,5 +38,5 @@ Fonts used:
 ##Usage:
 
 - Place the file `scriptless-socialsharing.php` and folder of the same name within `/plugins`
-- Enable the plugin
-- Place `<?php printScriptlessSocialSharingButtons(); ?>` on your theme files where you wish the buttons to appear.
+- Enable the plugin and set plugin options as needed
+- Place `<?php scriptlessSocialSharing::printButtons(); ?>` on your theme files where you wish the buttons to appear.
