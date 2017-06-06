@@ -1,6 +1,7 @@
 <?php
 /**
  * A Zenphoto plugin that provides scriptless and privacy friendly sharing buttons for:
+ * 
  * - Facebook
  * - Twitter
  * - Google+
@@ -35,10 +36,10 @@
  * - fontawesome (all other icons) http://fontawesome.io – SIL OFL 1.1 
  *
  * Usage:
- * Place <?php printScriptlessSocialSharingButtons(); ?> on your theme files where you wish the buttons to appear.
+ * Place `<?php ScriptlessSocialSharing::printButtons(); ?>` on your theme files where you wish the buttons to appear.
  *
  * @author Malte Müller (acrylian)
- * @copyright 2016 Malte Müller
+ * @copyright 2016-2017 Malte Müller
  * @license GPL v3 or later
  * @package plugins
  * @subpackage social
@@ -46,10 +47,10 @@
 $plugin_is_filter = 9 | THEME_PLUGIN;
 $plugin_description = gettext('A Zenphoto plugin that provides scriptless and privacy friendly sharing buttons for Facebook, Twitter, Google+, Pinterest, Linkedin, Xing, Reddit, Stumbleupon, Tumblr, WhatsApp (iOS only) and e-mail. (Note: No share counts because of that!).');
 $plugin_author = 'Malte Müller (acrylian)';
-$plugin_version = '1.4.2';
+$plugin_version = '1.5';
 $option_interface = 'scriptless_socialsharing_options';
 if (getOption('scriptless_socialsharing_iconfont')) {
-	zp_register_filter('theme_head', 'scriptlesssocialsharingCSS');
+	zp_register_filter('theme_head', 'scriptlessSocialsharing::CSS');
 }
 
 class scriptless_socialsharing_options {
@@ -103,257 +104,292 @@ class scriptless_socialsharing_options {
 		);
 		return $options;
 	}
+
 }
 
-function scriptlesssocialsharingCSS() {
-	?>
-	<link rel="stylesheet" href="<?php echo FULLWEBPATH . '/' . USER_PLUGIN_FOLDER; ?>/scriptless-socialsharing/style.min.css" type="text/css">
-	<?php
+/**
+ * Static class wrapper
+ * 
+ * @since 1.5
+ */
+class scriptlessSocialsharing {
+
+	static function CSS() {
+?>
+			<link rel="stylesheet" href="<?php echo FULLWEBPATH . '/' . USER_PLUGIN_FOLDER; ?>/scriptless-socialsharing/style.min.css" type="text/css">
+		<?php
+	}
+
+	/**
+	 * Gets an array with the buttons information
+	 *  
+	 * @param string $text Text to be displayed before the sharing list. HTML code allowed. Default empty
+	 * @param string $staticpagetitle If using static custom pages the file name is used unless you set this. Meant to be used for multilingual sites, too.
+	 * @return array
+	 */
+	function getButtons($text = '', $staticpagetitle = NULL) {
+		global $_zp_gallery_page, $_zp_current_album, $_zp_current_image, $_zp_current_zenpage_news, $_zp_current_zenpage_page, $_zp_current_category;
+		$title = '';
+		$desc = '';
+		$url = '';
+		$buttons = array();
+		$gallerytitle = html_encode(getBareGallerytitle());
+		$imgsource = '';
+		switch ($_zp_gallery_page) {
+			case 'index.php':
+			case 'gallery.php':
+				$url = getGalleryIndexURL();
+				$title = getBareGalleryTitle();
+				break;
+			case 'album.php':
+				$url = $_zp_current_album->getLink();
+				$title = $_zp_current_album->getTitle();
+				break;
+			case 'image.php':
+				$url = $_zp_current_image->getLink();
+				$title = $_zp_current_image->getTitle();
+				break;
+			case 'news.php':
+				if (function_exists("is_NewsArticle")) {
+					if (is_NewsArticle()) {
+						$url = $_zp_current_zenpage_news->getLink();
+						$title = $_zp_current_zenpage_news->getTitle();
+					} else if (is_NewsCategory()) {
+						$url = $_zp_current_category->getLink();
+						$title = $_zp_current_category->getTitle();
+					} else {
+						$url = getNewsIndexURL();
+						$title = getBareGalleryTitle() . ' - ' . gettext('News');
+					}
+				}
+				break;
+			case 'pages.php':
+				if (function_exists("is_Pages")) {
+					$url = $_zp_current_zenpage_page->getLink();
+					$title = $_zp_current_zenpage_page->getTitle();
+				}
+				break;
+			default: //static custom pages
+				$custompage = stripSuffix($_zp_gallery_page);
+				if (is_null($staticpagetitle)) {
+					// Handle some static custom pages we often have
+					switch ($_zp_gallery_page) {
+						case 'contact.php':
+							$statictitle = gettext('Contact');
+							break;
+						case 'archive.php':
+							$statictitle = gettext('Archive');
+							break;
+						case 'register.php':
+							$statictitle = gettext('Register');
+							break;
+						case 'search.php':
+							$statictitle = gettext('Search');
+							break;
+						default:
+							$statictitle = strtoupper($custompage);
+							break;
+					}
+				} else {
+					$statictitle = $staticpagetitle;
+				}
+				$url = getCustomPageURL($custompage);
+				$title = getBareGalleryTitle() . ' - ' . $statictitle;
+				break;
+		}
+
+		//$content = strip_tags($title);
+		//$desc = getContentShorten($title, 100, ' (…)', false);
+		$title = urlencode($title);
+		//$url = PROTOCOL . "://" . $_SERVER['HTTP_HOST'] . html_encode($url);
+		$url = urlencode(FULLWEBPATH . html_encode($url));
+		if ($text) {
+			echo $text;
+		}
+		if (getOption('scriptless_socialsharing_facebook')) {
+			$buttons[] = array(
+					'class' => 'sharingicon-facebook-f',
+					'title' => 'facebook',
+					'url' => 'http://www.facebook.com/sharer/sharer.php?u=' . $url
+			);
+		}
+		if (getOption('scriptless_socialsharing_twitter')) {
+			$via = '';
+			if (getOption('scriptless_socialsharing_twittername')) {
+				$via = '&amp;via=' . html_encode(getOption('scriptless_socialsharing_twittername'));
+			}
+			$buttons[] = array(
+					'class' => 'sharingicon-twitter',
+					'title' => 'Twitter',
+					'url' => 'https://twitter.com/intent/tweet?text=' . $title . $via . '&amp;url=' . $url
+			);
+		}
+		if (getOption('scriptless_socialsharing_gplus')) {
+			$buttons[] = array(
+					'class' => 'sharingicon-google-plus',
+					'title' => 'Google+',
+					'url' => 'https://plus.google.com/share?url=' . $url
+			);
+		}
+		if (getOption('scriptless_socialsharing_pinterest')) {
+			$buttons[] = array(
+					'class' => 'sharingicon-pinterest-p',
+					'title' => 'Pinterest',
+					'url' => 'http://pinterest.com/pin/create/button/?url=' . $url . '&amp;description=' . $title . '&amp;media=' . $url
+			);
+		}
+		if (getOption('scriptless_socialsharing_linkedin')) {
+			$buttons[] = array(
+					'class' => 'sharingicon-linkedin',
+					'title' => 'Linkedin',
+					'url' => 'http://www.linkedin.com/shareArticle?mini=true&amp;url=' . $url . '>&amp;title=' . $title . '&amp;source=' . $url
+			);
+		}
+		if (getOption('scriptless_socialsharing_xing')) {
+			$buttons[] = array(
+					'class' => 'sharingicon-xing',
+					'title' => 'Xing',
+					'url' => 'https://www.xing-share.com/app/user?op=share;sc_p=xing-share;url=' . $url
+			);
+		}
+		if (getOption('scriptless_socialsharing_reddit')) {
+			$buttons[] = array(
+					'class' => 'sharingicon-reddit',
+					'title' => 'Reddit',
+					'url' => 'http://reddit.com/submit?url=' . $url . '/?socialshare&amp;title=' . $title
+			);
+		}
+
+		if (getOption('scriptless_socialsharing_stumbleupon')) {
+			$buttons[] = array(
+					'class' => 'sharingicon-stumbleupon',
+					'title' => 'StumbleUpon',
+					'url' => 'http://www.stumbleupon.com/submit?url=' . $url . '&amp;title=' . $title
+			);
+		}
+		if (getOption('scriptless_socialsharing_tumblr')) {
+			$buttons[] = array(
+					'class' => 'sharingicon-tumblr',
+					'title' => 'Tumblr',
+					'url' => 'http://www.tumblr.com/share/link?url=' . $url . '&amp;name=' . $title
+			);
+		}
+		if (getOption('scriptless_socialsharing_whatsapp')) { // must be hidden initially!
+			$buttons[] = array(
+					'class' => 'sharingicon-whatsapp',
+					'title' => 'Whatsapp',
+					'url' => 'WhatsApp://send?text=' . $url
+			);
+		}
+		if (getOption('scriptless_socialsharing_digg')) {
+			$buttons[] = array(
+					'class' => 'sharingicon-digg',
+					'title' => 'Digg',
+					'url' => 'http://digg.com/submit?url=' . $url . '&amp;title=' . $title
+			);
+		}
+		if (getOption('scriptless_socialsharing_livejournal')) {
+			$buttons[] = array(
+					'class' => 'sharingicon-pencil',
+					'title' => 'Livejournal',
+					'url' => 'http://www.livejournal.com/update.bml?url=' . $url . '&amp;subject=' . $title
+			);
+		}
+		if (getOption('scriptless_socialsharing_buffer')) {
+			$buttons[] = array(
+					'class' => 'sharingicon-stack',
+					'title' => 'Buffer',
+					'url' => 'http://bufferapp.com/add?text=' . $url . '&amp;url=' . $url
+			);
+		}
+		if (getOption('scriptless_socialsharing_delicious')) {
+			$buttons[] = array(
+					'class' => 'sharingicon-delicious',
+					'title' => 'Delicious',
+					'url' => 'https://delicious.com/save?v=5&amp;provider=' . $gallerytitle . '&amp;noui&amp;jump=close&amp;url=' . $url . '&amp;title=' . $title
+			);
+		}
+		if (getOption('scriptless_socialsharing_evernote')) {
+			$buttons[] = array(
+					'class' => 'sharingicon-evernote',
+					'title' => 'Evernote',
+					'url' => 'http://www.evernote.com/clip.action?url=' . $url . '&amp;title=' . $title
+			);
+		}
+		if (getOption('scriptless_socialsharing_wordpress')) {
+			$buttons[] = array(
+					'class' => 'sharingicon-wordpress',
+					'title' => 'WordPress',
+					'url' => 'http://wordpress.com/press-this.php?u=' . $url . '&amp;t=' . $title
+			);
+		}
+		if (getOption('scriptless_socialsharing_pocket')) {
+			$buttons[] = array(
+					'class' => 'sharingicon-get-pocket',
+					'title' => 'Pocket',
+					'url' => 'https://getpocket.com/save?url=' . $url . '&amp;title=' . $title
+			);
+		}
+		if (getOption('scriptless_socialsharing_email')) {
+			$buttons[] = array(
+					'class' => 'sharingicon-envelope-o',
+					'title' => gettext('e-mail'),
+					'url' => 'mailto:?subject=' . $title . '&amp;body=' . $url
+			);
+		}
+		return $buttons;
+	}
+
+	/**
+	 * Place this where you wish the buttons to appear. The plugin includes also jQUery calls to set the buttons up to allow multiple button sets per page.
+	 *  
+	 * @param string $text Text to be displayed before the sharing list. HTML code allowed. Default empty
+	 * @param string $staticpagetitle If using static custom pages the file name is used unless you set this. Meant to be used for multilingual sites, too.
+	 */
+	function printButtons($text = '', $staticpagetitle = NULL, $iconsonly = null) {
+		$buttons = self::getButtons($text, $staticpagetitle);
+		if (is_null($iconsonly)) {
+			$iconsonly = getOption('scriptless_socialsharing_iconsonly');
+		}
+		?>
+			<ul class="scriptless_socialsharing">
+				<?php
+				foreach ($buttons as $button) {
+					$li_class = '';
+					if ($button['class'] == 'sharingicon-whatsapp') {
+						$li_class = ' class="whatsappLink hidden"';
+					}
+					?>
+					<li<?php echo $li_class; ?>>
+						<a class="<?php echo $button['class']; ?>" href="<?php echo $button['url']; ?>" title="<?php echo $button['title']; ?>" target="_blank">
+							<?php
+							if (!$iconsonly) {
+								echo $button['title'];
+							}
+							?>
+						</a>
+					</li>
+					<?php 
+					if ($button['class'] == 'sharingicon-whatsapp') { ?>
+						<script>
+							(navigator.userAgent.match(/(iPhone)/g)) ? $(“.whatsappLink”).removeClass('hidden') : null;
+						</script>
+					<?php 
+					} 
+				} ?>
+			</ul>
+		<?php
+	}
 }
 
 /**
  * Place this where you wish the buttons to appear. The plugin includes also jQUery calls to set the buttons up to allow multiple button sets per page.
  *  
+ * @deprecated 1.5 use scriptlessSocialsharing::printButtons() instead
+ * 
  * @param string $text Text to be displayed before the sharing list. HTML code allowed. Default empty
  * @param string $staticpagetitle If using static custom pages the file name is used unless you set this. Meant to be used for multilingual sites, too.
  */
-function printScriptlessSocialSharingButtons($text='', $staticpagetitle = NULL, $iconsonly = null) {
-	global $_zp_gallery, $_zp_gallery_page, $_zp_current_album, $_zp_current_image, $_zp_current_zenpage_news, $_zp_current_zenpage_page, $_zp_current_category;
-	$title = '';
-	$desc = '';
-	$url = '';
-	$buttons = array();
-	$gallerytitle = html_encode(getBareGallerytitle());
-	$imgsource = '';
-	switch ($_zp_gallery_page) {
-		case 'index.php':
-		case 'gallery.php':
-			$url = getGalleryIndexURL();
-			$title = getBareGalleryTitle();
-			break;
-		case 'album.php':
-			$url = $_zp_current_album->getLink();
-			$title = $_zp_current_album->getTitle();
-			break;
-		case 'image.php':
-			$url = $_zp_current_image->getLink();
-			$title = $_zp_current_image->getTitle();
-			break;
-		case 'news.php':
-			if (function_exists("is_NewsArticle")) {
-				if (is_NewsArticle()) {
-					$url = $_zp_current_zenpage_news->getLink();
-					$title = $_zp_current_zenpage_news->getTitle();
-				} else if (is_NewsCategory()) {
-					$url = $_zp_current_category->getLink();
-					$title = $_zp_current_category->getTitle();
-				} else {
-					$url = getNewsIndexURL();
-					$title = getBareGalleryTitle() . ' - ' . gettext('News');
-				}
-			}
-			break;
-		case 'pages.php':
-			if (function_exists("is_Pages")) {
-				$url = $_zp_current_zenpage_page->getLink();
-				$title = $_zp_current_zenpage_page->getTitle();
-			}
-			break;
-		default: //static custom pages
-			$custompage = stripSuffix($_zp_gallery_page);
-			if (is_null($staticpagetitle)) {
-				// Handle some static custom pages we often have
-				switch ($_zp_gallery_page) {
-					case 'contact.php':
-						$statictitle = gettext('Contact');
-						break;
-					case 'archive.php':
-						$statictitle = gettext('Archive');
-						break;
-					case 'register.php':
-						$statictitle = gettext('Register');
-						break;
-					case 'search.php':
-						$statictitle = gettext('Search');
-						break;
-					default:
-						$statictitle = strtoupper($custompage);
-						break;
-				}
-			} else {
-				$statictitle = $staticpagetitle;
-			}
-			$url = getCustomPageURL($custompage);
-			$title = getBareGalleryTitle() . ' - ' . $statictitle;
-			break;
-	}
-
-	//$content = strip_tags($title);
-	//$desc = getContentShorten($title, 100, ' (…)', false);
-	$title = urlencode($title);
-	//$url = PROTOCOL . "://" . $_SERVER['HTTP_HOST'] . html_encode($url);
-	$url = urlencode(FULLWEBPATH . html_encode($url));
-	if ($text) {
-		echo $text;
-	}
-	if (getOption('scriptless_socialsharing_facebook')) {
-		$buttons[] = array(
-				'class' => 'sharingicon-facebook-f',
-				'title' => 'facebook',
-				'url' => 'http://www.facebook.com/sharer/sharer.php?u=' . $url
-		);
-	}
-	if (getOption('scriptless_socialsharing_twitter')) {
-		$via = '';
-		if (getOption('scriptless_socialsharing_twittername')) {
-			$via = '&amp;via=' . html_encode(getOption('scriptless_socialsharing_twittername'));
-		}
-		$buttons[] = array(
-				'class' => 'sharingicon-twitter',
-				'title' => 'Twitter',
-				'url' => 'https://twitter.com/intent/tweet?text=' . $title . $via . '&amp;url=' . $url
-		);
-	}
-	if (getOption('scriptless_socialsharing_gplus')) {
-		$buttons[] = array(
-				'class' => 'sharingicon-google-plus',
-				'title' => 'Google+',
-				'url' => 'https://plus.google.com/share?url=' . $url
-		);
-	}
-	if (getOption('scriptless_socialsharing_pinterest')) {
-		$buttons[] = array(
-				'class' => 'sharingicon-pinterest-p',
-				'title' => 'Pinterest',
-				'url' => 'http://pinterest.com/pin/create/button/?url=' . $url . '&amp;description=' . $title . '&amp;media=' . $url
-		);
-	}
-	if (getOption('scriptless_socialsharing_linkedin')) {
-		$buttons[] = array(
-				'class' => 'sharingicon-linkedin',
-				'title' => 'Linkedin',
-				'url' => 'http://www.linkedin.com/shareArticle?mini=true&amp;url=' . $url . '>&amp;title=' . $title . '&amp;source=' . $url
-		);
-	}
-	if (getOption('scriptless_socialsharing_xing')) {
-		$buttons[] = array(
-				'class' => 'sharingicon-xing',
-				'title' => 'Xing',
-				'url' => 'https://www.xing-share.com/app/user?op=share;sc_p=xing-share;url=' . $url
-		);
-	}
-	if (getOption('scriptless_socialsharing_reddit')) {
-		$buttons[] = array(
-				'class' => 'sharingicon-reddit',
-				'title' => 'Reddit',
-				'url' => 'http://reddit.com/submit?url=' . $url . '/?socialshare&amp;title=' . $title
-		);
-	}
-
-	if (getOption('scriptless_socialsharing_stumbleupon')) {
-		$buttons[] = array(
-				'class' => 'sharingicon-stumbleupon',
-				'title' => 'StumbleUpon',
-				'url' => 'http://www.stumbleupon.com/submit?url=' . $url . '&amp;title=' . $title
-		);
-	}
-	if (getOption('scriptless_socialsharing_tumblr')) {
-		$buttons[] = array(
-				'class' => 'sharingicon-tumblr',
-				'title' => 'Tumblr',
-				'url' => 'http://www.tumblr.com/share/link?url=' . $url . '&amp;name=' . $title
-		);
-	}
-	if (getOption('scriptless_socialsharing_whatsapp')) { // must be hidden initially!
-		$buttons[] = array(
-				'class' => 'sharingicon-whatsapp',
-				'title' => 'Whatsapp',
-				'url' => 'WhatsApp://send?text=' . $url
-		);
-	}
-	if (getOption('scriptless_socialsharing_digg')) {
-		$buttons[] = array(
-				'class' => 'sharingicon-digg',
-				'title' => 'Digg',
-				'url' => 'http://digg.com/submit?url=' . $url . '&amp;title=' . $title
-		);
-	}
-	if (getOption('scriptless_socialsharing_livejournal')) {
-		$buttons[] = array(
-				'class' => 'sharingicon-pencil',
-				'title' => 'Livejournal',
-				'url' => 'http://www.livejournal.com/update.bml?url=' . $url . '&amp;subject=' . $title
-		);
-	}
-	if (getOption('scriptless_socialsharing_buffer')) {
-		$buttons[] = array(
-				'class' => 'sharingicon-stack',
-				'title' => 'Buffer',
-				'url' => 'http://bufferapp.com/add?text=' . $url . '&amp;url=' . $url
-		);
-	}
-	if (getOption('scriptless_socialsharing_delicious')) {
-		$buttons[] = array(
-				'class' => 'sharingicon-delicious',
-				'title' => 'Delicious',
-				'url' => 'https://delicious.com/save?v=5&amp;provider=' . $gallerytitle . '&amp;noui&amp;jump=close&amp;url=' . $url . '&amp;title=' . $title
-		);
-	}
-	if (getOption('scriptless_socialsharing_evernote')) {
-		$buttons[] = array(
-				'class' => 'sharingicon-evernote',
-				'title' => 'Evernote',
-				'url' => 'http://www.evernote.com/clip.action?url=' . $url . '&amp;title=' . $title
-		);
-	}
-	if (getOption('scriptless_socialsharing_wordpress')) {
-		$buttons[] = array(
-				'class' => 'sharingicon-wordpress',
-				'title' => 'WordPress',
-				'url' => 'http://wordpress.com/press-this.php?u=' . $url . '&amp;t=' . $title
-		);
-	}
-	if (getOption('scriptless_socialsharing_pocket')) {
-		$buttons[] = array(
-				'class' => 'sharingicon-get-pocket',
-				'title' => 'Pocket',
-				'url' => 'https://getpocket.com/save?url=' . $url . '&amp;title=' . $title
-		);
-	}
-	if (getOption('scriptless_socialsharing_email')) {
-		$buttons[] = array(
-				'class' => 'sharingicon-envelope-o',
-				'title' => gettext('e-mail'),
-				'url' => 'mailto:?subject=' . $title . '&amp;body=' . $url
-		);
-	}
-	if(is_null($iconsonly)) {
-		$iconsonly = getOption('scriptless_socialsharing_iconsonly');
-	}
-	?>
-	<ul class="scriptless_socialsharing">
-		<?php foreach($buttons as $button) { 
-			$li_class = '';
-			if($button['class'] == 'sharingicon-whatsapp') {
-				$li_class = ' class="whatsappLink hidden"';
-			}
-			?>
-			<li<?php echo $li_class; ?>>
-				<a class="<?php echo $button['class']; ?>" href="<?php echo $button['url']; ?>" title="<?php echo $button['title']; ?>" target="_blank">
-					<?php
-					if (!$iconsonly) {
-						echo $button['title'];
-					}
-					?>
-				</a>
-			</li>
-			<?php if($button['class'] == 'sharingicon-whatsapp') { ?>
-				<script>
-					(navigator.userAgent.match(/(iPhone)/g)) ? $(“.whatsappLink”).removeClass('hidden') : null;
-				</script>
-			<?php } ?>
-		<?php } ?>
-	</ul>
-	<?php
+function printScriptlessSocialSharingButtons($text = '', $staticpagetitle = NULL, $iconsonly = null) {
+	scriptlessSocialsharing::printButtons($text, $staticpagetitle, $iconsonly);
 }
-?>
