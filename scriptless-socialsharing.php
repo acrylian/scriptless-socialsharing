@@ -115,7 +115,7 @@ class scriptless_socialsharing_options {
 class scriptlessSocialsharing {
 
 	static function CSS() {
-?>
+		?>
 			<link rel="stylesheet" href="<?php echo FULLWEBPATH . '/' . USER_PLUGIN_FOLDER; ?>/scriptless-socialsharing/style.min.css" type="text/css">
 		<?php
 	}
@@ -123,11 +123,11 @@ class scriptlessSocialsharing {
 	/**
 	 * Gets an array with the buttons information
 	 *  
-	 * @param string $text Text to be displayed before the sharing list. HTML code allowed. Default empty
-	 * @param string $staticpagetitle If using static custom pages the file name is used unless you set this. Meant to be used for multilingual sites, too.
+	 * @param string $beforetext Text to be displayed before the sharing list. HTML code allowed. Default empty
+	 * @param string $customtext Custom text to share to override the internalt share text generation via current page
 	 * @return array
 	 */
-	function getButtons($text = '', $staticpagetitle = NULL) {
+	function getButtons($beforetext = '', $customtext = null) {
 		global $_zp_gallery_page, $_zp_current_album, $_zp_current_image, $_zp_current_zenpage_news, $_zp_current_zenpage_page, $_zp_current_category;
 		$title = '';
 		$desc = '';
@@ -139,78 +139,77 @@ class scriptlessSocialsharing {
 			case 'index.php':
 			case 'gallery.php':
 				$url = getGalleryIndexURL();
-				$title = getBareGalleryTitle();
+				$title = (empty($customtext)) ? getBareGalleryTitle() : $customtext;
 				break;
 			case 'album.php':
 				$url = $_zp_current_album->getLink();
-				$title = $_zp_current_album->getTitle();
+				$title = (empty($customtext)) ? $_zp_current_album->getTitle() : $customtext;
 				break;
 			case 'image.php':
 				$url = $_zp_current_image->getLink();
-				$title = $_zp_current_image->getTitle();
+				$title = (empty($customtext)) ? $_zp_current_image->getTitle() : $customtext;
 				break;
 			case 'news.php':
 				if (function_exists("is_NewsArticle")) {
 					if (is_NewsArticle()) {
 						$url = $_zp_current_zenpage_news->getLink();
-						$title = $_zp_current_zenpage_news->getTitle();
+						$title = (empty($customtext)) ? $_zp_current_zenpage_news->getTitle() : $customtext;
 					} else if (is_NewsCategory()) {
 						$url = $_zp_current_category->getLink();
-						$title = $_zp_current_category->getTitle();
+						$title = (empty($customtext)) ? $_zp_current_category->getTitle() : $customtext;
 					} else {
 						$url = getNewsIndexURL();
-						$title = getBareGalleryTitle() . ' - ' . gettext('News');
+						$title = (empty($customtext)) ? getBareGalleryTitle() . ' - ' . gettext('News') : $customtext;
 					}
 				}
 				break;
 			case 'pages.php':
 				if (function_exists("is_Pages")) {
 					$url = $_zp_current_zenpage_page->getLink();
-					$title = $_zp_current_zenpage_page->getTitle();
+					$title = (empty($customtext)) ? $_zp_current_zenpage_page->getTitle() : $customtext;
 				}
 				break;
 			default: //static custom pages
-				$custompage = stripSuffix($_zp_gallery_page);
-				if (is_null($staticpagetitle)) {
+				$url = getCustomPageURL($custompage);
+				if (empty($customtext)) {
 					// Handle some static custom pages we often have
 					switch ($_zp_gallery_page) {
 						case 'contact.php':
-							$statictitle = gettext('Contact');
+							$title = gettext('Contact');
 							break;
 						case 'archive.php':
-							$statictitle = gettext('Archive');
+							$title = gettext('Archive');
 							break;
 						case 'register.php':
-							$statictitle = gettext('Register');
+							$title = gettext('Register');
 							break;
 						case 'search.php':
-							$statictitle = gettext('Search');
+							$title = gettext('Search');
 							break;
 						default:
-							$statictitle = strtoupper($custompage);
+							$title = strtoupper(stripSuffix($_zp_gallery_page));
 							break;
-					}
+					} 
 				} else {
-					$statictitle = $staticpagetitle;
+					$title = $customtext;
 				}
-				$url = getCustomPageURL($custompage);
-				$title = getBareGalleryTitle() . ' - ' . $statictitle;
 				break;
 		}
-
-		//$content = strip_tags($title);
-		//$desc = getContentShorten($title, 100, ' (…)', false);
+		//override pagetitle with custom text
+		if (empty($customtext)) {
+			$title .= ' - ' . getBareGalleryTitle();
+		}
+		//$text = getContentShorten($title, 100, ' (…)', false);
 		$title = urlencode($title);
-		//$url = PROTOCOL . "://" . $_SERVER['HTTP_HOST'] . html_encode($url);
 		$url = urlencode(FULLWEBPATH . html_encode($url));
-		if ($text) {
-			echo $text;
+		if ($beforetext) {
+			echo $beforetext;
 		}
 		if (getOption('scriptless_socialsharing_facebook')) {
 			$buttons[] = array(
 					'class' => 'sharingicon-facebook-f',
 					'title' => 'facebook',
-					'url' => 'http://www.facebook.com/sharer/sharer.php?u=' . $url
+					'url' => 'http://www.facebook.com/sharer/sharer.php?u=' . $url . '&amp;quote=' . $title
 			);
 		}
 		if (getOption('scriptless_socialsharing_twitter')) {
@@ -344,10 +343,10 @@ class scriptlessSocialsharing {
 	 * Place this where you wish the buttons to appear. The plugin includes also jQUery calls to set the buttons up to allow multiple button sets per page.
 	 *  
 	 * @param string $text Text to be displayed before the sharing list. HTML code allowed. Default empty
-	 * @param string $staticpagetitle If using static custom pages the file name is used unless you set this. Meant to be used for multilingual sites, too.
-	 */
-	function printButtons($text = '', $staticpagetitle = NULL, $iconsonly = null) {
-		$buttons = self::getButtons($text, $staticpagetitle);
+	 * @param string $customtext Custom text to share to override the internalt share text generation via current page
+*/
+	function printButtons($text = '', $customtext = null, $iconsonly = null) {
+		$buttons = self::getButtons($text, $staticpagetitle, $customsharetext);
 		if (is_null($iconsonly)) {
 			$iconsonly = getOption('scriptless_socialsharing_iconsonly');
 		}
@@ -388,8 +387,8 @@ class scriptlessSocialsharing {
  * @deprecated 1.5 use scriptlessSocialsharing::printButtons() instead
  * 
  * @param string $text Text to be displayed before the sharing list. HTML code allowed. Default empty
- * @param string $staticpagetitle If using static custom pages the file name is used unless you set this. Meant to be used for multilingual sites, too.
+* @param string $customtext Custom text to share to override the internalt share text generation via current page
  */
-function printScriptlessSocialSharingButtons($text = '', $staticpagetitle = NULL, $iconsonly = null) {
-	scriptlessSocialsharing::printButtons($text, $staticpagetitle, $iconsonly);
+function printScriptlessSocialSharingButtons($text = '', $customtext = NULL, $iconsonly = null) {
+	scriptlessSocialsharing::printButtons($text, $customtext, $iconsonly);
 }
