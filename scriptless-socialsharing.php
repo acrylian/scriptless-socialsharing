@@ -127,7 +127,7 @@ class scriptlessSocialsharing {
 	 * @param string $customtext Custom text to share to override the internalt share text generation via current page
 	 * @return array
 	 */
-	function getButtons($beforetext = '', $customtext = null) {
+	static function getButtons($beforetext = '', $customtext = null) {
 		global $_zp_gallery_page, $_zp_current_album, $_zp_current_image, $_zp_current_zenpage_news, $_zp_current_zenpage_page, $_zp_current_category;
 		$title = '';
 		$desc = '';
@@ -345,7 +345,7 @@ class scriptlessSocialsharing {
 	 * @param string $text Text to be displayed before the sharing list. HTML code allowed. Default empty
 	 * @param string $customtext Custom text to share to override the internalt share text generation via current page
 */
-	function printButtons($text = '', $customtext = null, $iconsonly = null) {
+	static function printButtons($text = '', $customtext = null, $iconsonly = null) {
 		$buttons = self::getButtons($text, $staticpagetitle, $customsharetext);
 		if (is_null($iconsonly)) {
 			$iconsonly = getOption('scriptless_socialsharing_iconsonly');
