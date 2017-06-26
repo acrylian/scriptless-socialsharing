@@ -47,7 +47,7 @@
 $plugin_is_filter = 9 | THEME_PLUGIN;
 $plugin_description = gettext('A Zenphoto plugin that provides scriptless and privacy friendly sharing buttons for Facebook, Twitter, Google+, Pinterest, Linkedin, Xing, Reddit, Stumbleupon, Tumblr, WhatsApp (iOS only) and e-mail. (Note: No share counts because of that!).');
 $plugin_author = 'Malte Müller (acrylian)';
-$plugin_version = '1.5';
+$plugin_version = '1.5.2';
 $option_interface = 'scriptless_socialsharing_options';
 if (getOption('scriptless_socialsharing_iconfont')) {
 	zp_register_filter('theme_head', 'scriptlessSocialsharing::CSS');
@@ -119,7 +119,7 @@ class scriptlessSocialsharing {
 			<link rel="stylesheet" href="<?php echo FULLWEBPATH . '/' . USER_PLUGIN_FOLDER; ?>/scriptless-socialsharing/style.min.css" type="text/css">
 		<?php
 	}
-
+	
 	/**
 	 * Gets an array with the buttons information
 	 *  
@@ -346,7 +346,7 @@ class scriptlessSocialsharing {
 	 * @param string $customtext Custom text to share to override the internalt share text generation via current page
 */
 	static function printButtons($text = '', $customtext = null, $iconsonly = null) {
-		$buttons = self::getButtons($text, $staticpagetitle, $customsharetext);
+		$buttons = self::getButtons($text, '', $customtext);
 		if (is_null($iconsonly)) {
 			$iconsonly = getOption('scriptless_socialsharing_iconsonly');
 		}
