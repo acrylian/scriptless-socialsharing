@@ -35,7 +35,7 @@ Fonts used:
 - BRankic 1979 (buffer/stack icon) http://brankic1979.com/icons/ (free for personal and commercial use)
 - Entypo+ (evernote icon) http://www.entypo.com – CC BY-SA 4.0
 
-##Usage:
+## Usage:
 
 - Place the file `scriptless-socialsharing.php` and folder of the same name within `/plugins`
 - Enable the plugin and set plugin options as needed
